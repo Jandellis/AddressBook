@@ -1,26 +1,37 @@
 package com.reece.addressBook.models;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * Created by james_000 on 21/11/2017.
  */
+@Entity
 public class Contact {
-    private long id;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private String firstName;
     private String lastName;
     private String phoneNumber;
 
-    public Contact(long id, String firstName, String lastName, String phoneNumber) {
-        this.id = id;
+    public Contact(String firstName, String lastName, String phoneNumber) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumber = phoneNumber;
     }
 
-    public long getId() {
+    public Contact() {
+    }
+
+    public Long getId() {
         return id;
     }
 
-    public void setId(long id) {
+    public void setId(Long id) {
         this.id = id;
     }
 

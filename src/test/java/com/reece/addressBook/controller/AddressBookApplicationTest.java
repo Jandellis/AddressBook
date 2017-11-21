@@ -25,13 +25,16 @@ public class AddressBookApplicationTest {
     @Autowired
     JdbcTemplate jdbcTemplate;
 
+    @Autowired
+    ContactRepository contactRepository;
+
     @Before
     public void setUp() throws Exception {
     }
 
     @Test
     public void createAddressBook() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
         String testName = "test address book";
 
@@ -42,14 +45,14 @@ public class AddressBookApplicationTest {
 
     @Test
     public void createContact() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
         String firstName = "Bill";
         String lastName = "Bob";
         String phoneNumber = "0412345678";
 
         Contact contact = app.createContact(firstName, lastName, phoneNumber);
-        assertNotEquals(contact.getId(), 0);
+        assertNotEquals(contact.getId(), new Long(0));
         assertThat(contact.getFirstName(), is(firstName));
         assertThat(contact.getLastName(), is(lastName));
         assertThat(contact.getPhoneNumber(), is(phoneNumber));
@@ -57,7 +60,7 @@ public class AddressBookApplicationTest {
 
     @Test
     public void addContactToAddressBook() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
 
         String firstName = "Bill";
@@ -75,7 +78,7 @@ public class AddressBookApplicationTest {
 
     @Test(expected = DuplicateKeyException.class)
     public void addContactToAddressBookTwice() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
 
         String firstName = "Bill";
@@ -93,7 +96,7 @@ public class AddressBookApplicationTest {
 
     @Test
     public void deleteContactFromAddressBook() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
 
         String firstName = "Bill";
@@ -111,7 +114,7 @@ public class AddressBookApplicationTest {
 
     @Test
     public void deleteContact() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
 
         String firstName = "Bill";

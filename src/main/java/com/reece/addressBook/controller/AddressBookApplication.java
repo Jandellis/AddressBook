@@ -2,6 +2,7 @@ package com.reece.addressBook.controller;
 
 import com.reece.addressBook.models.AddressBook;
 import com.reece.addressBook.models.Contact;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +16,14 @@ public class AddressBookApplication {
     private static final Logger log = LoggerFactory.getLogger(AddressBookApplication.class);
 
     private JdbcTemplate jdbcTemplate;
+    private ContactRepository contactRepository;
+    private AddressBookRepository addressBookRepository;
 
     @Autowired
-    public AddressBookApplication(JdbcTemplate jdbcTemplate) {
+    public AddressBookApplication(JdbcTemplate jdbcTemplate, ContactRepository contactRepository, AddressBookRepository addressBookRepository) {
         this.jdbcTemplate = jdbcTemplate;
+        this.contactRepository = contactRepository;
+        this.addressBookRepository = addressBookRepository;
     }
 
     public void init() {
@@ -47,23 +52,13 @@ public class AddressBookApplication {
     }
 
     public AddressBook createAddressBook(String name) {
-        jdbcTemplate.update("INSERT INTO address_book(name) VALUES(?)", name);
-        return jdbcTemplate.queryForObject("SELECT id, name FROM address_book WHERE name = ?", new Object[] { name },
-                (rs, rowNum) -> new AddressBook(rs.getLong("id"), rs.getString("name"))
-        );
+        AddressBook addressBook = new AddressBook(name);
+        return addressBookRepository.save(addressBook);
     }
 
     public Contact createContact(String firstName, String lastName, String phoneNumber) {
-        jdbcTemplate.update("INSERT INTO contact(first_name, last_name, phone_number) VALUES(?,?,?)", firstName, lastName, phoneNumber);
-        return jdbcTemplate.queryForObject(
-                "SELECT id, first_name, last_name, phone_number FROM contact " +
-                        "WHERE first_name = ? AND last_name = ? and phone_number = ?",
-                new Object[] { firstName, lastName, phoneNumber },
-                (rs, rowNum) -> new Contact(rs.getLong("id"),
-                        rs.getString("first_name"),
-                        rs.getString("last_name"),
-                        rs.getString("phone_number"))
-        );
+        Contact contact = new Contact(firstName, lastName, phoneNumber);
+        return contactRepository.save(contact);
     }
 
     public boolean addContactToAddressBook(Contact contact, AddressBook addressBook) {

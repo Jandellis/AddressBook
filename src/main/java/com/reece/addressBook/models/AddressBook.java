@@ -1,15 +1,24 @@
 package com.reece.addressBook.models;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+
 /**
  * Created by james_000 on 21/11/2017.
  */
 public class AddressBook {
     private String name;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    public AddressBook(long id, String name) {
+    public AddressBook(String name) {
         this.name = name;
-        this.id = id;
+    }
+
+    public AddressBook() {
     }
 
     public String getName() {
