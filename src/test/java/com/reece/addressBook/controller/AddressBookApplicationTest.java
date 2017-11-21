@@ -30,9 +30,12 @@ public class AddressBookApplicationTest {
     @Test
     public void createAddressBook() throws Exception {
         AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        app.setUpDB();
+        String testName = "test address book";
 
-        AddressBook addressBook = app.createAddressBook("test address book");
+        AddressBook addressBook = app.createAddressBook(testName);
         assertNotEquals(addressBook.getId(), 0);
+        assertThat(addressBook.getName(), is(testName));
     }
 
 }

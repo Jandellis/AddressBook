@@ -7,6 +7,11 @@ public class AddressBook {
     private String name;
     private long id;
 
+    public AddressBook(long id, String name) {
+        this.name = name;
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
