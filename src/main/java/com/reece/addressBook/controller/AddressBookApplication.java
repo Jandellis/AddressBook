@@ -42,8 +42,8 @@ public class AddressBookApplication {
         jdbcTemplate.execute("CREATE TABLE address_book_contact(" +
                 "address_book_id int, contact_id int, " +
                 "PRIMARY KEY (address_book_id, contact_id)," +
-                "FOREIGN KEY(address_book_id) REFERENCES address_book(id)," +
-                "FOREIGN KEY(contact_id) REFERENCES contact(id))");
+                "FOREIGN KEY(address_book_id) REFERENCES address_book(id) ON DELETE CASCADE," +
+                "FOREIGN KEY(contact_id) REFERENCES contact(id) ON DELETE CASCADE)");
     }
 
     public AddressBook createAddressBook(String name) {
@@ -64,6 +64,15 @@ public class AddressBookApplication {
                         rs.getString("last_name"),
                         rs.getString("phone_number"))
         );
+    }
+
+    public boolean addContactToAddressBook(Contact contact, AddressBook addressBook) {
+        return jdbcTemplate.update("INSERT INTO address_book_contact(address_book_id, contact_id) VALUES(?,?)", addressBook.getId(), contact.getId()) > 0;
+
+    }
+
+    public boolean deleteContactFromAddressBook(Contact contact, AddressBook addressBook) {
+        return jdbcTemplate.update("DELETE FROM address_book_contact WHERE address_book_id = ? AND  contact_id = ?", addressBook.getId(), contact.getId()) > 0;
     }
 
 }

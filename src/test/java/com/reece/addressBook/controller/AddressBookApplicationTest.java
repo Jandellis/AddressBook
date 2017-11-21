@@ -8,6 +8,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -52,6 +53,60 @@ public class AddressBookApplicationTest {
         assertThat(contact.getFirstName(), is(firstName));
         assertThat(contact.getLastName(), is(lastName));
         assertThat(contact.getPhoneNumber(), is(phoneNumber));
+    }
+
+    @Test
+    public void addContactToAddressBook() throws Exception {
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        app.setUpDB();
+
+        String firstName = "Bill";
+        String lastName = "Bob";
+        String phoneNumber = "0412345678";
+        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+
+        String testName = "test address book";
+        AddressBook addressBook = app.createAddressBook(testName);
+
+        boolean result = app.addContactToAddressBook(contact, addressBook);
+
+        assertTrue(result);
+    }
+
+    @Test(expected = DuplicateKeyException.class)
+    public void addContactToAddressBookTwice() throws Exception {
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        app.setUpDB();
+
+        String firstName = "Bill";
+        String lastName = "Bob";
+        String phoneNumber = "0412345678";
+        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+
+        String testName = "test address book";
+        AddressBook addressBook = app.createAddressBook(testName);
+
+        boolean result = app.addContactToAddressBook(contact, addressBook);
+        result = app.addContactToAddressBook(contact, addressBook);
+
+    }
+
+    @Test
+    public void deleteContactFromAddressBook() throws Exception {
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        app.setUpDB();
+
+        String firstName = "Bill";
+        String lastName = "Bob";
+        String phoneNumber = "0412345678";
+        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+
+        String testName = "test address book";
+        AddressBook addressBook = app.createAddressBook(testName);
+        app.addContactToAddressBook(contact, addressBook);
+        boolean result = app.deleteContactFromAddressBook(contact, addressBook);
+
+        assertTrue(result);
     }
 
 }
