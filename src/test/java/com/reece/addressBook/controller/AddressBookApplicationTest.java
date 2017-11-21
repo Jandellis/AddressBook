@@ -109,4 +109,22 @@ public class AddressBookApplicationTest {
         assertTrue(result);
     }
 
+    @Test
+    public void deleteContact() throws Exception {
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        app.setUpDB();
+
+        String firstName = "Bill";
+        String lastName = "Bob";
+        String phoneNumber = "0412345678";
+        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+
+        String testName = "test address book";
+        AddressBook addressBook = app.createAddressBook(testName);
+        app.addContactToAddressBook(contact, addressBook);
+        boolean result = app.deleteContact(contact);
+
+        assertTrue(result);
+    }
+
 }

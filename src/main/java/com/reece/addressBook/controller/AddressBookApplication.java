@@ -75,4 +75,7 @@ public class AddressBookApplication {
         return jdbcTemplate.update("DELETE FROM address_book_contact WHERE address_book_id = ? AND  contact_id = ?", addressBook.getId(), contact.getId()) > 0;
     }
 
+    public boolean deleteContact(Contact contact) {
+        return jdbcTemplate.update("DELETE FROM contact WHERE id = ?", contact.getId()) > 0;
+    }
 }
