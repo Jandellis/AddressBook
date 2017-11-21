@@ -1,5 +1,6 @@
 package com.reece.addressBook.controller;
 
+import com.reece.addressBook.models.AddressBook;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +21,7 @@ public class AddressBookApplication {
     }
 
     public void init() {
-
+        setUpDB();
     }
 
     public void setUpDB() {
@@ -42,6 +43,10 @@ public class AddressBookApplication {
                 "PRIMARY KEY (address_book_id, contact_id)," +
                 "FOREIGN KEY(address_book_id) REFERENCES address_book(id))," +
                 "FOREIGN KEY(contact_id) REFERENCES contacts(id))");
+    }
+
+    public AddressBook createAddressBook(String name) {
+        return new AddressBook();
     }
 
 }
