@@ -1,6 +1,7 @@
 package com.reece.addressBook.controller;
 
 import com.reece.addressBook.models.AddressBook;
+import com.reece.addressBook.models.Contact;
 import org.hamcrest.core.Is;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,6 +37,21 @@ public class AddressBookApplicationTest {
         AddressBook addressBook = app.createAddressBook(testName);
         assertNotEquals(addressBook.getId(), 0);
         assertThat(addressBook.getName(), is(testName));
+    }
+
+    @Test
+    public void createContact() throws Exception {
+        AddressBookApplication app = new AddressBookApplication(jdbcTemplate);
+        app.setUpDB();
+        String firstName = "Bill";
+        String lastName = "Bob";
+        String phoneNumber = "0412345678";
+
+        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+        assertNotEquals(contact.getId(), 0);
+        assertThat(contact.getFirstName(), is(firstName));
+        assertThat(contact.getLastName(), is(lastName));
+        assertThat(contact.getPhoneNumber(), is(phoneNumber));
     }
 
 }
