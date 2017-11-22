@@ -21,11 +21,6 @@ public class AddressBookApplicationTest {
     @Autowired
     AddressBookApplication app;
 
-
-    @Before
-    public void setUp() throws Exception {
-    }
-
     @Test
     public void createAddressBook() throws Exception {
         app.setUpDB();
@@ -54,13 +49,9 @@ public class AddressBookApplicationTest {
     public void addContactToAddressBook() throws Exception {
         app.setUpDB();
 
-        String firstName = "Bill";
-        String lastName = "Bob";
-        String phoneNumber = "0412345678";
-        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+        Contact contact = app.createContact("Bill", "Bob", "0412345678");
 
-        String testName = "test address book";
-        AddressBook addressBook = app.createAddressBook(testName);
+        AddressBook addressBook = app.createAddressBook("test address book");
 
         AddressBookContact result = app.addContactToAddressBook(contact, addressBook);
 
@@ -72,13 +63,9 @@ public class AddressBookApplicationTest {
     public void deleteContactFromAddressBook() throws Exception {
         app.setUpDB();
 
-        String firstName = "Bill";
-        String lastName = "Bob";
-        String phoneNumber = "0412345678";
-        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+        Contact contact = app.createContact("Bill", "Bob", "0412345678");
 
-        String testName = "test address book";
-        AddressBook addressBook = app.createAddressBook(testName);
+        AddressBook addressBook = app.createAddressBook("test address book");
         AddressBookContact addressBookContact = app.addContactToAddressBook(contact, addressBook);
         boolean result = app.deleteContactFromAddressBook(addressBookContact);
 
@@ -89,13 +76,9 @@ public class AddressBookApplicationTest {
     public void deleteContact() throws Exception {
         app.setUpDB();
 
-        String firstName = "Bill";
-        String lastName = "Bob";
-        String phoneNumber = "0412345678";
-        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+        Contact contact = app.createContact("Bill", "Bob", "0412345678");
 
-        String testName = "test address book";
-        AddressBook addressBook = app.createAddressBook(testName);
+        AddressBook addressBook = app.createAddressBook("test address book");
         app.addContactToAddressBook(contact, addressBook);
         boolean result = app.deleteContact(contact);
 
@@ -109,13 +92,9 @@ public class AddressBookApplicationTest {
     public void deleteAddressBookButNotContacts() throws Exception {
         app.setUpDB();
 
-        String firstName = "Bill";
-        String lastName = "Bob";
-        String phoneNumber = "0412345678";
-        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+        Contact contact = app.createContact("Bill", "Bob", "0412345678");
 
-        String testName = "test address book";
-        AddressBook addressBook = app.createAddressBook(testName);
+        AddressBook addressBook = app.createAddressBook("test address book");
         app.addContactToAddressBook(contact, addressBook);
         boolean result = app.deleteAddressBook(addressBook);
 
