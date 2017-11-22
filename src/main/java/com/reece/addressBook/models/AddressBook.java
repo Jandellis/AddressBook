@@ -5,9 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-/**
- * Created by james_000 on 21/11/2017.
- */
 @Entity
 public class AddressBook {
     private String name;

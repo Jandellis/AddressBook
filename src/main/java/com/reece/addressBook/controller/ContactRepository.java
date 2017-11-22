@@ -8,7 +8,7 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
 /**
- * Please fill me out with a bit of info about this file
+ * A CRUD repository for database actions on a contact
  */
 public interface ContactRepository extends CrudRepository<Contact, Long>{
 

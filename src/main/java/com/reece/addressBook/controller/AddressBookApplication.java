@@ -11,9 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
-/**
- * Created by james_000 on 21/11/2017.
- */
 @Service
 public class AddressBookApplication {
 
@@ -38,6 +35,9 @@ public class AddressBookApplication {
     setUpDB();
   }
 
+  /**
+   * Creates all empty tables for the database
+   */
   public void setUpDB() {
     log.info("Setting up database tables");
 
@@ -60,11 +60,23 @@ public class AddressBookApplication {
         "FOREIGN KEY(contact_id) REFERENCES contact(id) ON DELETE CASCADE)");
   }
 
+  /**
+   * Creates a new address book
+   * @param name the name of the address book
+   * @return the address book
+   */
   public AddressBook createAddressBook(String name) {
     AddressBook addressBook = new AddressBook(name);
     return addressBookRepository.save(addressBook);
   }
 
+  /**
+   * Creates a new contact, if one exists with the same first name, last name and phone number it will return that one
+   * @param firstName the first name of the contact
+   * @param lastName the last name of the contact
+   * @param phoneNumber the phone number of the contact
+   * @return the contact
+   */
   public Contact createContact(String firstName, String lastName, String phoneNumber) {
     Optional<Contact> existingContact = contactRepository.getContact(firstName, lastName, phoneNumber);
 
@@ -76,42 +88,84 @@ public class AddressBookApplication {
     return contactRepository.save(contact);
   }
 
+  /**
+   * Adds a contact into an address book
+   * @param contact the contact to add
+   * @param addressBook the address book to add the contact to
+   * @return
+   */
   public AddressBookContact addContactToAddressBook(Contact contact, AddressBook addressBook) {
     AddressBookContact addressBookContact = new AddressBookContact(addressBook.getId(), contact.getId());
     return addressBookContactRepository.save(addressBookContact);
   }
 
+  /**
+   * Deletes a contact from an address book, but does not delete the contact
+   * @param addressBookContact
+   * @return
+   */
   public boolean deleteContactFromAddressBook(AddressBookContact addressBookContact) {
     addressBookContactRepository.delete(addressBookContact);
     return true;
   }
 
+  /**
+   * Deletes a contact, if it in an address book, it will be removed from that too.
+   * @param contact the contact to delete
+   * @return
+   */
   public boolean deleteContact(Contact contact) {
     contactRepository.delete(contact);
     return true;
   }
 
+  /**
+   * Deletes an address book
+   * @param addressBook the address book to delete
+   * @return
+   */
   public boolean deleteAddressBook(AddressBook addressBook) {
     addressBookRepository.delete(addressBook);
     return true;
   }
 
+  /**
+   * Gets a contact by its id
+   * @param id the id of the contact to find
+   * @return the contact
+   */
   public Contact getContact(Long id) {
     return contactRepository.findOne(id);
   }
 
+  /**
+   * Gets all of the contacts in an address book
+   * @param addressBook the address book of the contacts to find
+   * @return a list of contacts
+   */
   public List<Contact> getAddressBookContacts(AddressBook addressBook) {
     return contactRepository.getAddressBookContacts(addressBook.getId());
   }
 
+  /**
+   * Gets all of the contacts
+   * @return a list of all contacts
+   */
   public List<Contact> getAllContacts() {
     return (List<Contact>) contactRepository.findAll();
   }
 
+  /**
+   * Prints all contacts of an address book out to the log
+   * @param addressBook the address book of contacts to find
+   */
   public void printContacts(AddressBook addressBook){
     contactRepository.getAddressBookContacts(addressBook.getId()).forEach(contact -> log.info(contact.toString()));
   }
 
+  /**
+   * Prints all contacts out to the log
+   */
   public void printContacts(){
     getAllContacts().forEach(contact -> log.info(contact.toString()));
   }

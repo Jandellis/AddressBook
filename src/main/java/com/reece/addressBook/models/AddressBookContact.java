@@ -4,9 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.IdClass;
 
-/**
- * Please fill me out with a bit of info about this file
- */
 @Entity
 @IdClass(AddressBookContactPK.class)
 public class AddressBookContact {

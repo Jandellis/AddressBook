@@ -11,7 +11,7 @@ public class Application {
 	public static void main(String[] args) {
 		ConfigurableApplicationContext app = SpringApplication.run(Application.class, args);
 
-		AddressBookApplication employeeList = (AddressBookApplication) app.getBean("AddressBookApplication");
+		AddressBookApplication employeeList = (AddressBookApplication) app.getBean("addressBookApplication");
 		employeeList.init();
 	}
 }

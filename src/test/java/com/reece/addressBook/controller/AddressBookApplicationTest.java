@@ -103,6 +103,8 @@ public class AddressBookApplicationTest {
         boolean result = app.deleteContact(contact);
 
         assertTrue(result);
+        List<Contact> contacts = app.getAddressBookContacts(addressBook);
+        assertThat(contacts.size(), is(0));
     }
 
 

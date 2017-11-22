@@ -5,7 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 
 /**
- * Please fill me out with a bit of info about this file
+ * The Primary Key for the Address Book Contact
  */
 public class AddressBookContactPK implements Serializable {
 
