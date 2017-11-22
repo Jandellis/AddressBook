@@ -14,9 +14,6 @@ import org.springframework.test.context.junit4.SpringRunner;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
-/**
- * Created by james_000 on 21/11/2017.
- */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class AddressBookApplicationTest {

@@ -1,4 +1,4 @@
-James McNamara Address Book
+James McNamara - Reece Address Book
 
 Requirements
 ============
