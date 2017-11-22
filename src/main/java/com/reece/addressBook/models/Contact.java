@@ -68,4 +68,36 @@ public class Contact {
                 ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Contact contact = (Contact) o;
+
+        if (id != null ? !id.equals(contact.id) : contact.id != null) {
+            return false;
+        }
+        if (firstName != null ? !firstName.equals(contact.firstName) : contact.firstName != null) {
+            return false;
+        }
+        if (lastName != null ? !lastName.equals(contact.lastName) : contact.lastName != null) {
+            return false;
+        }
+        return phoneNumber != null ? phoneNumber.equals(contact.phoneNumber) : contact.phoneNumber == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id != null ? id.hashCode() : 0;
+        result = 31 * result + (firstName != null ? firstName.hashCode() : 0);
+        result = 31 * result + (lastName != null ? lastName.hashCode() : 0);
+        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
+        return result;
+    }
 }

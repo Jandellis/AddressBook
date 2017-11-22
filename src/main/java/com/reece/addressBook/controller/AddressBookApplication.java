@@ -1,16 +1,19 @@
 package com.reece.addressBook.controller;
 
 import com.reece.addressBook.models.AddressBook;
+import com.reece.addressBook.models.AddressBookContact;
 import com.reece.addressBook.models.Contact;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
 
 /**
  * Created by james_000 on 21/11/2017.
  */
+@Service
 public class AddressBookApplication {
 
     private static final Logger log = LoggerFactory.getLogger(AddressBookApplication.class);
@@ -18,12 +21,14 @@ public class AddressBookApplication {
     private JdbcTemplate jdbcTemplate;
     private ContactRepository contactRepository;
     private AddressBookRepository addressBookRepository;
+    private AddressBookContactRepository addressBookContactRepository;
 
     @Autowired
-    public AddressBookApplication(JdbcTemplate jdbcTemplate, ContactRepository contactRepository, AddressBookRepository addressBookRepository) {
+    public AddressBookApplication(JdbcTemplate jdbcTemplate, ContactRepository contactRepository, AddressBookRepository addressBookRepository,  AddressBookContactRepository addressBookContactRepository) {
         this.jdbcTemplate = jdbcTemplate;
         this.contactRepository = contactRepository;
         this.addressBookRepository = addressBookRepository;
+        this.addressBookContactRepository = addressBookContactRepository;
     }
 
     public void init() {
@@ -61,16 +66,29 @@ public class AddressBookApplication {
         return contactRepository.save(contact);
     }
 
-    public boolean addContactToAddressBook(Contact contact, AddressBook addressBook) {
-        return jdbcTemplate.update("INSERT INTO address_book_contact(address_book_id, contact_id) VALUES(?,?)", addressBook.getId(), contact.getId()) > 0;
+    public AddressBookContact addContactToAddressBook(Contact contact, AddressBook addressBook) {
+        AddressBookContact addressBookContact = new AddressBookContact(addressBook.getId(), contact.getId());
+        return addressBookContactRepository.save(addressBookContact);
+        //return jdbcTemplate.update("INSERT INTO address_book_contact(address_book_id, contact_id) VALUES(?,?)", addressBook.getId(), contact.getId()) > 0;
 
     }
 
-    public boolean deleteContactFromAddressBook(Contact contact, AddressBook addressBook) {
-        return jdbcTemplate.update("DELETE FROM address_book_contact WHERE address_book_id = ? AND  contact_id = ?", addressBook.getId(), contact.getId()) > 0;
+    public boolean deleteContactFromAddressBook(AddressBookContact addressBookContact) {
+        addressBookContactRepository.delete(addressBookContact);
+        return true;
     }
 
     public boolean deleteContact(Contact contact) {
-        return jdbcTemplate.update("DELETE FROM contact WHERE id = ?", contact.getId()) > 0;
+        contactRepository.delete(contact);
+        return true;
+    }
+
+    public boolean deleteAddressBook(AddressBook addressBook) {
+        addressBookRepository.delete(addressBook);
+        return true;
+    }
+
+    public Contact getConatct(Long id) {
+        return contactRepository.findOne(id);
     }
 }

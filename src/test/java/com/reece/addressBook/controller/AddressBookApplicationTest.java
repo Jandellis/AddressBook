@@ -1,6 +1,7 @@
 package com.reece.addressBook.controller;
 
 import com.reece.addressBook.models.AddressBook;
+import com.reece.addressBook.models.AddressBookContact;
 import com.reece.addressBook.models.Contact;
 import org.hamcrest.core.Is;
 import org.junit.Before;
@@ -23,10 +24,8 @@ import static org.junit.Assert.*;
 public class AddressBookApplicationTest {
 
     @Autowired
-    JdbcTemplate jdbcTemplate;
+    AddressBookApplication app;
 
-    @Autowired
-    ContactRepository contactRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +33,6 @@ public class AddressBookApplicationTest {
 
     @Test
     public void createAddressBook() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
         String testName = "test address book";
 
@@ -45,7 +43,6 @@ public class AddressBookApplicationTest {
 
     @Test
     public void createContact() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
         String firstName = "Bill";
         String lastName = "Bob";
@@ -60,7 +57,6 @@ public class AddressBookApplicationTest {
 
     @Test
     public void addContactToAddressBook() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
 
         String firstName = "Bill";
@@ -71,32 +67,14 @@ public class AddressBookApplicationTest {
         String testName = "test address book";
         AddressBook addressBook = app.createAddressBook(testName);
 
-        boolean result = app.addContactToAddressBook(contact, addressBook);
+        AddressBookContact result = app.addContactToAddressBook(contact, addressBook);
 
-        assertTrue(result);
-    }
-
-    @Test(expected = DuplicateKeyException.class)
-    public void addContactToAddressBookTwice() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
-        app.setUpDB();
-
-        String firstName = "Bill";
-        String lastName = "Bob";
-        String phoneNumber = "0412345678";
-        Contact contact = app.createContact(firstName, lastName, phoneNumber);
-
-        String testName = "test address book";
-        AddressBook addressBook = app.createAddressBook(testName);
-
-        boolean result = app.addContactToAddressBook(contact, addressBook);
-        result = app.addContactToAddressBook(contact, addressBook);
-
+        assertThat(result.getAddressBookId(), is(addressBook.getId()));
+        assertThat(result.getContactId(), is(contact.getId()));
     }
 
     @Test
     public void deleteContactFromAddressBook() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
 
         String firstName = "Bill";
@@ -106,15 +84,14 @@ public class AddressBookApplicationTest {
 
         String testName = "test address book";
         AddressBook addressBook = app.createAddressBook(testName);
-        app.addContactToAddressBook(contact, addressBook);
-        boolean result = app.deleteContactFromAddressBook(contact, addressBook);
+        AddressBookContact addressBookContact = app.addContactToAddressBook(contact, addressBook);
+        boolean result = app.deleteContactFromAddressBook(addressBookContact);
 
         assertTrue(result);
     }
 
     @Test
     public void deleteContact() throws Exception {
-        AddressBookApplication app = new AddressBookApplication(jdbcTemplate, contactRepository);
         app.setUpDB();
 
         String firstName = "Bill";
@@ -130,4 +107,37 @@ public class AddressBookApplicationTest {
         assertTrue(result);
     }
 
+
+    @Test
+    public void deleteAddressBookButNotContacts() throws Exception {
+        app.setUpDB();
+
+        String firstName = "Bill";
+        String lastName = "Bob";
+        String phoneNumber = "0412345678";
+        Contact contact = app.createContact(firstName, lastName, phoneNumber);
+
+        String testName = "test address book";
+        AddressBook addressBook = app.createAddressBook(testName);
+        app.addContactToAddressBook(contact, addressBook);
+        boolean result = app.deleteAddressBook(addressBook);
+
+        assertTrue(result);
+
+        Contact afterDelete = app.getConatct(contact.getId());
+        assertThat(afterDelete, is(contact));
+    }
+
+    @Test
+    public void addContactToMultipleAddressBooks() throws Exception {
+        app.setUpDB();
+
+        Contact contact = app.createContact("Bill", "Bob", "0412345678");
+
+        AddressBook book1 = app.createAddressBook("book 1");
+        AddressBook book2 = app.createAddressBook("book 2");
+        app.addContactToAddressBook(contact, book1);
+        app.addContactToAddressBook(contact, book2);
+
+    }
 }
