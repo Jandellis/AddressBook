@@ -13,5 +13,5 @@ Currently will not do anything aside from creating an empty database.
 
 Running Tests
 =============
-* Windows -gradlew.bat test
-* Linux ./gradlew test
+* Windows - gradlew.bat test
+* Linux - ./gradlew test
