@@ -120,7 +120,6 @@ public class AddressBookApplicationTest {
         assertThat(contacts.size(), is(2));
         List<Contact> contacts2 = app.getAddressBookContacts(book2);
         assertThat(contacts2.size(), is(1));
-
     }
 
     @Test
@@ -132,7 +131,6 @@ public class AddressBookApplicationTest {
 
         List<Contact> contacts = app.getAllContacts();
         assertThat(contacts.size(), is(2));
-
     }
 
 
@@ -144,7 +142,6 @@ public class AddressBookApplicationTest {
         Contact contact2 = app.createContact("Bill", "Bob", "0412345678");
 
         assertThat(contact, is(contact2));
-
     }
 
     @Test
@@ -157,37 +154,5 @@ public class AddressBookApplicationTest {
 
         List<Contact> contacts = app.getAllContacts();
         assertThat(contacts.size(), is(2));
-
-    }
-
-    @Test
-    public void printContacts() throws Exception {
-        app.setUpDB();
-
-        Contact contact = app.createContact("Bill", "Bob", "0412345678");
-        Contact contact2 = app.createContact("Bill", "Bob", "0412345678");
-        Contact contact3 = app.createContact("Fred", "Lawn", "0412347654");
-
-        app.printContacts();
-
-    }
-
-
-    @Test
-    public void printContactsForAddressBook() throws Exception {
-        app.setUpDB();
-
-
-        Contact contact = app.createContact("Bill", "Bob", "0412345678");
-        Contact contact2 = app.createContact("Fred", "Lawn", "0412347654");
-
-        AddressBook book1 = app.createAddressBook("book 1");
-        AddressBook book2 = app.createAddressBook("book 2");
-        app.addContactToAddressBook(contact, book1);
-        app.addContactToAddressBook(contact2, book1);
-        app.addContactToAddressBook(contact, book2);
-
-        app.printContacts(book2);
-
     }
 }
