@@ -33,8 +33,7 @@ import static org.mockito.Mockito.times;
 public class AddressBookApplicationLogOutputTest {
 
     @Autowired
-    AddressBookApplication app;
-
+    private AddressBookApplication app;
 
     @Mock
     private Appender mockAppender;
@@ -66,18 +65,9 @@ public class AddressBookApplicationLogOutputTest {
 
         //5 log lines, 1 for db set up, 1 for ASTQueryTranslatorFactory, 3 for each contact
         verify(mockAppender,  times(5)).doAppend(captorLoggingEvent.capture());
-        List<LoggingEvent> events = captorLoggingEvent.getAllValues();
-        int contactsFound = 0;
-        //check that the right contact has been logged
-        List<Contact> contacts = Stream.of(contact1, contact2, contact3).collect(Collectors.toList());
-        for (LoggingEvent event : events) {
-            for (Contact contact : contacts) {
-                if (event.getFormattedMessage().equals(contact.toString())) {
-                    contactsFound++;
-                }
-            }
-        }
-        assertThat(contactsFound, is(3));
+
+        assertThat(countContacts(Stream.of(contact1, contact2, contact3).collect(Collectors.toList()),
+                captorLoggingEvent.getAllValues()), is(3));
     }
 
     @Test
@@ -98,10 +88,13 @@ public class AddressBookApplicationLogOutputTest {
 
         //2 log lines, 1 for db set up, 1 the contact
         verify(mockAppender,  times(2)).doAppend(captorLoggingEvent.capture());
-        List<LoggingEvent> events = captorLoggingEvent.getAllValues();
+
+        assertThat(countContacts(Stream.of(contact1).collect(Collectors.toList()),
+                captorLoggingEvent.getAllValues()), is(1));
+    }
+
+    private int countContacts(List<Contact> contacts, List<LoggingEvent> events) {
         int contactsFound = 0;
-        //check that the right contact has been logged
-        List<Contact> contacts = Stream.of(contact1).collect(Collectors.toList());
         for (LoggingEvent event : events) {
             for (Contact contact : contacts) {
                 if (event.getFormattedMessage().equals(contact.toString())) {
@@ -109,7 +102,7 @@ public class AddressBookApplicationLogOutputTest {
                 }
             }
         }
-        assertThat(contactsFound, is(1));
+        return contactsFound;
     }
 }
 

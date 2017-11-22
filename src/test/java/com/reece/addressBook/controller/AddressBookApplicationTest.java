@@ -19,7 +19,7 @@ import static org.junit.Assert.*;
 public class AddressBookApplicationTest {
 
     @Autowired
-    AddressBookApplication app;
+    private AddressBookApplication app;
 
     @Test
     public void createAddressBook() throws Exception {
