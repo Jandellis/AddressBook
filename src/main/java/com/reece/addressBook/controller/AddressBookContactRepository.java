@@ -9,4 +9,5 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface AddressBookContactRepository extends CrudRepository<AddressBookContact, AddressBookContactPK> {
 
+
 }
